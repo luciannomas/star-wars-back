@@ -25,6 +25,7 @@
     "@nestjs/mongoose": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "axios": "^1.7.9",
+    "heroku": "^8.7.1",
     "mongoose": "^8.9.5",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1"
@@ -57,20 +58,20 @@
     "typescript-eslint": "^8.20.0"
   },
   "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": ".",
+    "testEnvironment": "node",
+    "testRegex": ".*\\.spec\\.ts$|.*\\.e2e-spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/dist/"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "roots": [
+      "<rootDir>/src",
+      "<rootDir>/test"
+    ]
   }
 }

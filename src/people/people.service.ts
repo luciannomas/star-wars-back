@@ -11,7 +11,7 @@ export class PeopleService {
   constructor(@InjectModel('Person') private readonly personModel: Model<PersonResponse>) {}
 
   private formatPersonData(data: any, id: number): PersonResponse {
-    // Validar y ajustar el valor de gender
+    
     const validGenders = ['male', 'female', 'other'];
     const gender = validGenders.includes(data.gender) ? data.gender : 'other';
   
