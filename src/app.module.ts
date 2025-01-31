@@ -4,11 +4,12 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Connection } from 'mongoose';
 import { PeopleModule } from './people/people.module';
+import { FilmsModule } from './films/films.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb+srv://star-wars-db:admin123@cluster0.tofqzz9.mongodb.net/star-wars'), // armar var de entorno
-    PeopleModule
+    PeopleModule, FilmsModule
   ],
   controllers: [AppController],
   providers: [AppService],
