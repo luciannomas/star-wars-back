@@ -53,7 +53,7 @@ Respuesta: Devuelve un objeto Person con los detalles del personaje.
 Ejemplo de Uso:
 curl -X GET https://star-wars-back-production.up.railway.app/ask/people/1
 
-## Project setup
+## Project local setup 
 
 ```bash
 $ npm install
@@ -63,6 +63,7 @@ $ npm install
 
 ```bash
 # watch mode
+$ npm run build
 $ npm run start:dev
 ```
 
