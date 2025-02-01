@@ -7,11 +7,12 @@ import { PeopleModule } from './people/people.module';
 import { FilmsModule } from './films/films.module';
 import { PlanetsModule } from './planets/planets.module';
 import { SpeciesModule } from './species/species.module';
+import { RelationsModule } from './relations/relations.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb+srv://star-wars-db:admin123@cluster0.tofqzz9.mongodb.net/star-wars'), // armar var de entorno
-    PeopleModule, FilmsModule, PlanetsModule, SpeciesModule
+    PeopleModule, FilmsModule, PlanetsModule, SpeciesModule, RelationsModule
   ],
   controllers: [AppController],
   providers: [AppService],
