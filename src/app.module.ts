@@ -6,11 +6,12 @@ import { Connection } from 'mongoose';
 import { PeopleModule } from './people/people.module';
 import { FilmsModule } from './films/films.module';
 import { PlanetsModule } from './planets/planets.module';
+import { SpeciesModule } from './species/species.module';
 
 @Module({
   imports: [
     MongooseModule.forRoot('mongodb+srv://star-wars-db:admin123@cluster0.tofqzz9.mongodb.net/star-wars'), // armar var de entorno
-    PeopleModule, FilmsModule, PlanetsModule
+    PeopleModule, FilmsModule, PlanetsModule, SpeciesModule
   ],
   controllers: [AppController],
   providers: [AppService],
