@@ -27,7 +27,7 @@ describe('PeopleController', () => {
 
   describe('getPerson', () => {
     it('should return a person object', async () => {
-      const result: PersonResponse = {
+      const result: any = {
         personId: 1,
         name: 'Luke Skywalker',
         birthYear: '19BBY',
