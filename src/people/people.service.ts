@@ -1,29 +1,41 @@
-import { Injectable, NotFoundException, InternalServerErrorException, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { PersonResponse } from './interface/people.interface';
 import axios from 'axios';
+import { FilmsService } from '../films/films.service';
+import { PersonResponse } from './interface/people.interface';
 
 @Injectable()
 export class PeopleService {
   private readonly logger = new Logger(PeopleService.name);
   private readonly apiEndpoint = 'https://swapi.dev/api/people';
 
-  constructor(@InjectModel('Person') private readonly personModel: Model<PersonResponse>) {}
+  constructor(
+    @InjectModel('Person') private readonly personModel: Model<PersonResponse>,
+    private readonly filmsService: FilmsService
+  ) {}
 
-  private formatPersonData(data: any, id: number): PersonResponse {
+  private async formatPersonData(data: any, id: number): Promise<PersonResponse> {
     const validGenders = ['male', 'female', 'other'];
     const gender = validGenders.includes(data.gender) ? data.gender : 'other';
-  
+
+    // Obtener títulos de las películas
+    const filmTitles = await Promise.all(
+      data.films.map(async (url: string) => {
+        const filmId = parseInt(url.split('/').slice(-2, -1)[0], 10);
+        const film = await this.filmsService.getFilmById(filmId);
+        return film.title;
+      })
+    );
+
     return {
       personId: id,
       name: data.name,
       birthYear: data.birth_year,
       gender: gender,
       height: parseInt(data.height, 10),
-      films: data.films,
+      films: filmTitles,
       species: data.species || [],
-      //species: data.species[0],
     };
   }
 
@@ -44,7 +56,7 @@ export class PeopleService {
         }
 
         // Formatear la información recibida
-        const formattedData = this.formatPersonData(data, id);
+        const formattedData = await this.formatPersonData(data, id);
      
         // Guardar la información en la base de datos
         person = new this.personModel(formattedData);
@@ -56,7 +68,7 @@ export class PeopleService {
         this.logger.log(`Person with ID ${id} found in database`);
       }
 
-      return person;
+      return person.toObject();
     } catch (error) {
       this.logger.error(`Error fetching person with ID ${id}: ${error.message}`);
       if (error.response && error.response.status === 404) {
