@@ -5,6 +5,7 @@ export interface Person {
     gender: string;
     height: number;
     films: string[];
+    species: string; 
   }
   
   export type PersonResponse = Person;

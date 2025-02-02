@@ -22,6 +22,8 @@ export class PeopleService {
       gender: gender,
       height: parseInt(data.height, 10),
       films: data.films,
+      species: data.species || [],
+      //species: data.species[0],
     };
   }
 

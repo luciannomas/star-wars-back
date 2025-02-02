@@ -16,7 +16,7 @@ export class SpeciesDocument extends Document implements SpeciesEntity {
   @Prop({ required: true })
   designation: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false }) // Hacer que homeworld sea opcional
   homeworld: string;
 
   @Prop({ required: true })

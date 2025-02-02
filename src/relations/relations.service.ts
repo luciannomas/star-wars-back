@@ -5,8 +5,10 @@ import { PeopleService } from '../people/people.service';
 import { FilmsService } from '../films/films.service';
 
 import { CreateRelationDto } from './dto/relations.dto';
-import { RelationDocument } from './schema/relations.schema';
-import { PersonFilms } from '../relations/interfaces/relations.interface';
+import { PlanetResidentsDocument, RelationDocument } from './schema/relations.schema';
+import { PersonFilms, PlanetResidents, Relation } from '../relations/interfaces/relations.interface';
+import { PlanetsService } from 'src/planets/planets.service';
+import { SpeciesService } from 'src/species/species.service';
 
 
 @Injectable()
@@ -15,8 +17,11 @@ export class RelationsService {
 
   constructor(
     @InjectModel('Relation') private readonly relationModel: Model<RelationDocument>,
+    @InjectModel('PlanetResidents') private readonly planetResidentsModel: Model<PlanetResidentsDocument>,
     private readonly peopleService: PeopleService,
     private readonly filmsService: FilmsService,
+    private readonly planetsService: PlanetsService,
+    private readonly speciesService: SpeciesService,
   ) {}
 
   private async saveRelation(createRelationDto: CreateRelationDto): Promise<RelationDocument> {
@@ -64,6 +69,64 @@ export class RelationsService {
       this.logger.error(`Error fetching films for person with ID ${personId}: ${error.message}`);
       if (error.response && error.response.status === 404) {
         throw new NotFoundException(`Person with ID ${personId} not found`);
+      } else {
+        throw new InternalServerErrorException('Unexpected error occurred');
+      }
+    }
+  }
+
+  async getPlanetResidents(planetId: number): Promise<PlanetResidents> {
+    try {
+      // Obtener datos del planeta desde la API externa
+      const planet = await this.planetsService.getPlanetById(planetId);
+      const residentUrls = planet.residents;
+
+      // Obtener detalles de los residentes
+      const residents = await Promise.all(
+        residentUrls.map(async (url) => {
+          const residentId = parseInt(url.split('/').slice(-2, -1)[0], 10);
+          const resident = await this.peopleService.getPersonById(residentId);
+          
+          // Obtener la especie del residente
+          const speciesUrls = resident.species; // Asumiendo que la especie está en un array
+          const speciesId = speciesUrls.length > 0 ? parseInt(speciesUrls[0].split('/').slice(-2, -1)[0], 10) : null;
+          const species = speciesId ? await this.speciesService.getSpeciesById(speciesId) : { name: 'Unknown' };
+
+          const filmTitles = await Promise.all(
+            resident.films.map(async (filmUrl) => {
+              const filmId = parseInt(filmUrl.split('/').slice(-2, -1)[0], 10);
+              const film = await this.filmsService.getFilmById(filmId);
+              return film.title;
+            })
+          );
+
+          return {
+            name: resident.name,
+            species: species.name,
+            films: filmTitles,
+          };
+        })
+      );
+
+      // Obtener títulos de las películas del planeta
+      const planetFilmTitles = await Promise.all(
+        planet.films.map(async (filmUrl) => {
+          const filmId = parseInt(filmUrl.split('/').slice(-2, -1)[0], 10);
+          const film = await this.filmsService.getFilmById(filmId);
+          return film.title;
+        })
+      );
+
+      return {
+        planetId,
+        planetName: planet.name,
+        residents,
+        films: planetFilmTitles,
+      };
+    } catch (error) {
+      this.logger.error(`Error fetching residents for planet with ID ${planetId}: ${error.message}`);
+      if (error.response && error.response.status === 404) {
+        throw new NotFoundException(`Planet with ID ${planetId} not found`);
       } else {
         throw new InternalServerErrorException('Unexpected error occurred');
       }

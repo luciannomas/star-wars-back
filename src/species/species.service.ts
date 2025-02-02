@@ -21,7 +21,7 @@ export class SpeciesService {
       name: data.name,
       classification: data.classification,
       designation: data.designation,
-      homeworld: data.homeworld,
+      homeworld: data.homeworld || '',
       language: data.language,
       people: data.people,
       films: data.films,

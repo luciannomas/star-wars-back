@@ -4,4 +4,5 @@ export class PersonDto {
     gender: string;
     height: number;
     films: string[];
+    species: string;
   }

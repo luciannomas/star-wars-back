@@ -8,5 +8,6 @@ import { SpeciesDocument, SpeciesSchema } from './schema/species.schema';
   imports: [MongooseModule.forFeature([{ name: 'Specie', schema: SpeciesSchema }])],
   controllers: [SpeciesController],
   providers: [SpeciesService],
+  exports: [SpeciesService]
 })
 export class SpeciesModule {}

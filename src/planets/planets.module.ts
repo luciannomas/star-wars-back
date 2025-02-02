@@ -9,5 +9,6 @@ import { PlanetDocument, PlanetSchema } from './schema/planets.schema';
   imports: [MongooseModule.forFeature([{ name: 'Planet', schema: PlanetSchema }])],
   controllers: [PlanetsController],
   providers: [PlanetsService],
+  exports: [PlanetsService],
 })
 export class PlanetsModule {}

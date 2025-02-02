@@ -29,6 +29,9 @@ export class Person extends Document {
 
   @Prop({ required: true, unique: true })
   personId: number;
+
+  @Prop({ type: [String], required: false }) // Hacer que species sea opcional
+  species: string[]; 
 }
 
 export const PersonSchema = SchemaFactory.createForClass(Person);

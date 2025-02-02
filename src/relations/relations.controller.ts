@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Logger } from '@nestjs/common';
 import { RelationsService } from './relations.service';
-import { PersonFilms } from './interfaces/relations.interface';
+import { PersonFilms, PlanetResidents } from './interfaces/relations.interface';
 
 @Controller('ask/relations')
 export class RelationsController {
@@ -16,6 +16,18 @@ export class RelationsController {
       return result;
     } catch (error) {
       this.logger.error(`Failed to retrieve films for person ID ${personId}: ${error.message}`);
+      throw error;
+    }
+  }
+
+  @Get('planet-residents/:planetId')
+  async getPlanetResidents(@Param('planetId') planetId: string): Promise<PlanetResidents> {
+    try {
+      const result = await this.relationsService.getPlanetResidents(Number(planetId));
+      this.logger.log(`Returning residents for planet ID ${planetId}`);
+      return result;
+    } catch (error) {
+      this.logger.error(`Failed to retrieve residents for planet ID ${planetId}: ${error.message}`);
       throw error;
     }
   }
