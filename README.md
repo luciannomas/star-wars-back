@@ -128,3 +128,7 @@ curl -X GET http://localhost:3000/ask/relations/planet-residents/1
 
 ## Deployment
 Esta applicación esta subida a railway: https://star-wars-back-production.up.railway.app/
+
+
+## Improvements
+Desde refinar todas las relacioens posibles hasta integrar una base de datos de tipo cache para acelerar las respuestas y tambien utilizar variables de entorno para mantener segura la app. Integrar la documentacion y herramientas para pruebas desde swagger. Y por ultimo agregar un sistema de mensajerias para evitar la sobrecarga de consultas.
